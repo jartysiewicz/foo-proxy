@@ -1,7 +1,7 @@
 (ns foo-proxy.nio
-  (:import java.nio.channels.CompletionHandler
-           java.nio.ByteBuffer)
-  (:refer-clojure :exclude [read]))
+  (:refer-clojure :exclude [read])
+  (:import java.nio.ByteBuffer
+           java.nio.channels.CompletionHandler))
 
 (def ^:constant MAX_MESSAGE_LENGTH 1024)
 
@@ -11,8 +11,8 @@
   `(reify java.nio.channels.CompletionHandler
      ~completed-fn
      (~(symbol "failed") [~(symbol "this") ~(symbol "e") ~(symbol "a")]
-      (println "Error in completion handler")
-      (println ~(symbol "e")))))
+      (clojure.tools.logging/error "Error in completion handler")
+      (clojure.tools.logging/error ~(symbol "e")))))
 
 (defn end-of-message? [msg]
   (= (last msg) 0x0A))

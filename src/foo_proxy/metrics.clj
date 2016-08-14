@@ -1,5 +1,6 @@
 (ns foo-proxy.metrics
   (:require [clojure.core.async :as async]
+            [clojure.tools.logging :as log]
             [foo-proxy.message :as message])
   (:import java.util.concurrent.ConcurrentLinkedDeque))
 
@@ -52,7 +53,7 @@
   "Start metrics processor on a lightweight thread. Stops when a :metrics/stop
   message is received on the message channel. Can output current metrics
   on a channel if a {:metrics/report <channel>} message is received."
-  (println "Starting metrics processor")
+  (log/info "Starting metrics processor")
   (async/go
     (loop [metrics (initial-metrics)]
       (let [msg (async/<! msg-chan)]
@@ -62,4 +63,4 @@
               (async/put! report-chan (metrics-report metrics))
               (recur metrics))
             (recur (register-msg metrics msg))))))
-    (println "Stopping metrics processor")))
+    (log/info "Stopping metrics processor")))

@@ -52,6 +52,8 @@
 
     (stop-processor msg-chan)))
 
+;; Test the sliding window calculation by pausing the calling thread.
+;; A better way would be to provide a fixture that mocks the current time.
 (deftest metrics-window-test
   (let [msg-chan    (async/chan)
         report-chan (async/chan)]
