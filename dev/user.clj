@@ -1,9 +1,12 @@
 (ns user
   (:require [beckon :refer :all]
             [clojure.core.async :as async]
+            [clojure.tools.logging :as log]
             [foo-proxy
              [metrics :as metrics]
              [server :as server]]))
+
+;; Helpers for interactive development
 
 (def config {:port         8002
              :forward-host "localhost"
@@ -29,5 +32,5 @@
 (Thread/setDefaultUncaughtExceptionHandler
  (reify Thread$UncaughtExceptionHandler
    (uncaughtException [_ thread ex]
-     (println "Uncaught exception")
-     (println ex))))
+     (log/error "Uncaught exception")
+     (log/error ex))))
