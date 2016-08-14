@@ -30,7 +30,7 @@
           (if (end-of-message? updated-msg)
             (callback (byte-array updated-msg))
             (do
-              ;; Partial message received -- do another read
+              ;; Partial message received -- do another read.
               (.compact buffer)
               (read chan callback buffer updated-msg))))))))
 
