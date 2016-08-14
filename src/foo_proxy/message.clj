@@ -3,8 +3,8 @@
 
 (defn parse-message-type
   "Parses a message like \"REQ 1 Foobar\" into a message type, e.g. \":req\"."
-  [s]
-  (-> s
+  [bytes]
+  (-> (String. bytes)
       (subs 0 3)
       .toLowerCase
       keyword))

@@ -4,14 +4,14 @@
              [proxy :as proxy]]
             [clojure.core.async :as async])
   (:import java.net.InetSocketAddress
-           java.nio.ByteBuffer
            [java.nio.channels
             AsynchronousChannelGroup
             AsynchronousServerSocketChannel
             CompletionHandler]
            [java.util.concurrent
             CountDownLatch
-            Executors]))
+            Executors])
+  (:refer-clojure :exclude [read]))
 
 (def executor (Executors/newSingleThreadExecutor))
 
@@ -34,7 +34,7 @@
                               (read socket-chan proxy-conn metrics-chan)))))
         msg-handler     (fn [bytes]
                           ;; Record metrics about request
-                          (async/put! metrics-chan (String. bytes))
+                          (async/put! metrics-chan bytes)
                           (proxy/forward proxy-conn metrics-chan response-writer bytes))]
     (nio/read socket-chan msg-handler)))
 

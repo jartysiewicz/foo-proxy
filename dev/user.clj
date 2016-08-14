@@ -5,7 +5,9 @@
              [metrics :as metrics]
              [server :as server]]))
 
-(def config {:port 8080})
+(def config {:port         8002
+             :forward-host "localhost"
+             :forward-port 8001})
 
 (def started? (atom false))
 
@@ -14,7 +16,7 @@
 
 (defn start []
   (metrics/start-metrics-processor msg-chan)
-  (future (server/start (:port config) msg-chan))
+  (future (server/start (:port config) (:forward-host config) (:forward-port config) msg-chan))
   (reset! started? true))
 
 (defn stop []
@@ -29,5 +31,3 @@
    (uncaughtException [_ thread ex]
      (println "Uncaught exception")
      (println ex))))
-
-#_(reset! (beckon/signal-atom "INT") (fn [] "Signal received"))

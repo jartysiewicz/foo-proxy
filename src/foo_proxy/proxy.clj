@@ -4,8 +4,7 @@
              [metrics :as metrics]
              [nio :as nio]])
   (:import java.net.InetSocketAddress
-           java.nio.ByteBuffer
-           [java.nio.channels AsynchronousSocketChannel CompletionHandler ReadPendingException]
+           [java.nio.channels AsynchronousSocketChannel]
            java.util.concurrent.CountDownLatch))
 
 (defn- connect* [host port]
@@ -29,5 +28,5 @@
   (nio/write conn bytes)
   (nio/read conn (fn [bytes]
                    ;; Record metrics about response.
-                   (async/put! metrics-chan (String. bytes))
+                   (async/put! metrics-chan bytes)
                    (response-fn bytes))))
