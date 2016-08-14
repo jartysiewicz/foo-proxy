@@ -25,14 +25,6 @@
 
 (def connect (memoize connect*))
 
-(defn- write-handler [conn response-fn]
-  (nio/completion-handler
-   (completed
-    [_ _ _]
-    (try
-      (nio/read conn response-fn)
-      (catch ReadPendingException e
-        (println "Caught read pending exception"))))))
-
 (defn forward [conn response-fn bytes]
-  (nio/write conn bytes (write-handler conn response-fn)))
+  (nio/write conn bytes)
+  (nio/read conn response-fn))
