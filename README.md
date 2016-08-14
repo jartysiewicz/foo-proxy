@@ -14,8 +14,6 @@ $> java -Dlisten=8002 -Dforward=localhost:8001 -jar target/foo-proxy-0.1.0-SNAPS
 Metrics can be requested by sending SIGUSR2 to the JVM process:
 
 ```
-$> jps
-92288 foo-proxy-0.1.0-SNAPSHOT-standalone.jar
 $> kill -s USR2 $(jps | grep foo-proxy | awk '{ print $1 }')
 ```
 The JVM process will dump metrics to stdout.
