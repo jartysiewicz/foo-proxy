@@ -61,12 +61,12 @@
         socket-chan (.bind (AsynchronousServerSocketChannel/open channel-group) socket-addr)]
     (accept socket-chan proxy-conn metrics-chan)))
 
-(defn start [port metrics-chan]
+(defn start [port forward-host forward-port metrics-chan]
   "Ceremony around starting a server that exposes a way of shutting it down.
    Wires up the proxy client and the metrics processor."
   (alter-var-root #'*shutdown-latch* (fn [_] (CountDownLatch. 1)))
   (let [channel-group (AsynchronousChannelGroup/withThreadPool executor)
-        proxy-conn    (proxy/connect "localhost" 8001)
+        proxy-conn    (proxy/connect forward-host forward-port)
         server-thread (start* port channel-group proxy-conn metrics-chan)]
     (try
       (.await *shutdown-latch*)
