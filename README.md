@@ -5,7 +5,7 @@ Uses Java's non-blocking I/O building blocks in the `java.nio` package.
 
 ## Usage
 
-Prerequisites: the [Leiningen][lein] build tool.
+Prerequisites: the [Leiningen][lein] build tool, and Java >= 7.
 
 ```
 $> lein uberjar
