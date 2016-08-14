@@ -1,12 +1,12 @@
 (ns foo-proxy.proxy
+  (:require [clojure.core.async :as async]
+            [foo-proxy
+             [metrics :as metrics]
+             [nio :as nio]])
   (:import java.net.InetSocketAddress
-           [java.nio.channels
-            AsynchronousSocketChannel
-            CompletionHandler
-            ReadPendingException]
            java.nio.ByteBuffer
-           java.util.concurrent.CountDownLatch)
-  (:require [foo-proxy.nio :as nio]))
+           [java.nio.channels AsynchronousSocketChannel CompletionHandler ReadPendingException]
+           java.util.concurrent.CountDownLatch))
 
 (defn- connect* [host port]
   (let [socket-addr (InetSocketAddress. host port)
@@ -25,6 +25,9 @@
 
 (def connect (memoize connect*))
 
-(defn forward [conn response-fn bytes]
+(defn forward [conn metrics-chan response-fn bytes]
   (nio/write conn bytes)
-  (nio/read conn response-fn))
+  (nio/read conn (fn [bytes]
+                   ;; Record metrics about response.
+                   (async/put! metrics-chan (String. bytes))
+                   (response-fn bytes))))
