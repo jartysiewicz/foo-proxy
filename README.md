@@ -1,6 +1,7 @@
 # foo-proxy
 
 A proxy for a simple TCP protocol that records certain message-level metrics.
+Uses Java's non-blocking I/O building blocks in the `java.nio` package.
 
 ## Usage
 
