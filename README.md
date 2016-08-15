@@ -21,6 +21,21 @@ The JVM process will dump metrics to stdout.
 
 SIGUSR1 was not used because it is reserved by the JVM and cannot be used in applications.
 
+## Todo
+
+There is one flaw in the metrics processing: for sliding window metrics,
+requests are kept in a deque, which is never cleaned up. This will sooner or
+later lead to out-of-memory errors. 
+
+The deque should be cleaned up periodically, deleting events that are no longer needed.
+
+As a stop-gap measure for testing over a longer period of time, the heap size can simply
+be increased:
+
+```
+java -Xmx=1024m ... 
+``` 
+
 ## License
 
 Copyright © 2016 Johannes Staffans
